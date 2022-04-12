@@ -16,6 +16,7 @@ class CreateConfigurationsTable extends Migration
         Schema::create('configurations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->integer("delay");
         });
     }
 

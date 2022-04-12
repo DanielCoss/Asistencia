@@ -43,7 +43,7 @@
                                     <a class="nav-link text-black" href="#">Calendario</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-black" href="#">Importar CSV</a>
+                                    <a class="nav-link text-black" href="#" data-bs-toggle="modal" data-bs-target="#importFile">Importar CSV</a>
                                 </li>
                             </ul>
                         </ul>
@@ -98,5 +98,27 @@
             @yield('content')
         </main>
     </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="importFile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Importar CSV</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/importarCSV" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-body">
+                <input class="form-control" type="file" name="csv" id="csv" accept=".csv" required>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button submit" class="btn btn-primary">Guardar Archivo</button>
+              </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

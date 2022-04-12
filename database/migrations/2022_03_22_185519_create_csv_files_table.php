@@ -16,6 +16,7 @@ class CreateCsvFilesTable extends Migration
         Schema::create('csv_files', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('id_employer')->references('id')->on('employers');
             $table->string("name");
             $table->date("date");
             $table->time("onDuty");

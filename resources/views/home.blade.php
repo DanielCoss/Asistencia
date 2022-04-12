@@ -74,9 +74,12 @@
                 <div class="modal-body">
                     <label for="#id">Id:</label>
                     <input type="number" class="form-control" id="id" name="id" min="1" step="1.0" value="" required>
+                    <div id="passwordHelpBlock" class="form-text">
+                      No olvides que el ID debe de ser el mismo que el que esta en el CSV
+                    </div>
                     <label for="#name">Nombre:</label>
                     <input type="text" class="form-control" id="name" name="name" value="" required>
-                    <label for="#department">departmento:</label>
+                    <label for="#department">Departmento:</label>
                     <input type="text" class="form-control" id="department" name="department" value="" required>
                     <label for="#job">Puesto:</label>
                     <input type="text" class="form-control" id="job" name="job" value="" required>
