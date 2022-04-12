@@ -28,7 +28,9 @@ class HomeController extends Controller
     {
         $q = Fortnight::all();
         if(isset($_GET["q_date"])){
-            $date = $_GET["q_date"];
+            $f_id = intval($_GET["q_date"]);
+            $date = Fortnight::select('date')->where('id',$f_id)->first();
+            $date = $date->date;
             $idate = date("d-m-Y",strtotime($date));
             $date_int = strtotime($date);
             $m = date("m", $date_int);
@@ -53,20 +55,33 @@ class HomeController extends Controller
                 $idate = date("d-m-Y",strtotime("15-".$m."-".$y));
                 $edate = date("d-m-Y",strtotime(date("t",date("m"))."-".$m."-".$y));
             }
-            //dates in format sql
-            $b_idate = date('Y-m-d',strtotime($idate));
-            $b_edate = date('Y-m-d',strtotime($edate));
+            
+            $d = Fortnight::select("id")->where('date', date('Y-m-d',strtotime($idate)))->first();
+            $f_id = $d->id;
         }
+        //dates in format sql
+        $b_idate = date('Y-m-d',strtotime($idate));
+        $b_edate = date('Y-m-d',strtotime($edate));
+        
         if (isset($_GET["search"])) {
             $search = strval($_GET["search"]);
             $employers = Employer::select('employers.id AS id','employers.name AS name', 'asistance.delays AS delays', 'asistance.absences AS absences')
             ->join('quincenal_assistances as asistance','employers.id', '=', 'asistance.id_employer')
-            ->where('employers.name','LIKE',"%$search%")
+            ->join('fortnights as f', 'f.id', '=', 'asistance.id_fortnigh')
+            ->whereBetween('f.date', [$b_idate, $b_edate])
+            ->where('employers.name','LIKE',"%$search%" )
+            ->where('f.id', $f_id)
+            ->orwhere('employers.id', '=', intval($search))
+            ->whereBetween('f.date', [$b_idate, $b_edate])
+            ->where('f.id', $f_id)
             ->orderBy('name')
             ->get();
         }else{
             $employers = Employer::select('employers.id AS id','employers.name AS name', 'asistance.delays AS delays', 'asistance.absences AS absences')
             ->join('quincenal_assistances as asistance','employers.id', '=', 'asistance.id_employer')
+            ->join('fortnights as f', 'f.id', '=', 'asistance.id_fortnigh')
+            ->where('f.id', $f_id)
+            ->whereBetween('f.date', [$b_idate, $b_edate])
             ->orderBy('name')
             ->get();
         }

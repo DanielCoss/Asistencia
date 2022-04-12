@@ -18,7 +18,7 @@
                           <label for="date">Escoge la quincena</label>
                           <select class="form-select" aria-label=".form-select-lg example" name="q_date">
                             @foreach ($q as $n)
-                                <option value="{{$n->date}}">{{date("d-m-Y",strtotime($n->date))}}</option>
+                                <option value="{{$n->id}}|">{{date("d-m-Y",strtotime($n->date))}}</option>
                             @endforeach
                           </select>
                           <button type="button submit" class="btn btn-primary mt-1">Aplicar Filtro</button>
