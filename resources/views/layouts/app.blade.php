@@ -32,22 +32,19 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    @if (true)
+                    @auth
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav me-auto">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                                 <li class="nav-item">
-                                    <a class="nav-link text-black" href="#">Lista</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-black" href="#">Calendario</a>
+                                    <a class="nav-link text-black" href="/calendario">Calendario</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-black" href="#" data-bs-toggle="modal" data-bs-target="#importFile">Importar CSV</a>
                                 </li>
                             </ul>
                         </ul>
-                    @endif
+                    @endauth
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
@@ -60,9 +57,7 @@
                             @endif
 
                             @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">Registrarse</a>
-                                </li>
+                                
                             @endif
                             @else
                                 <div class="">
@@ -78,6 +73,7 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('register') }}">Registrar a alguien</a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                         document.getElementById('logout-form').submit();">
