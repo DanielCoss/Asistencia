@@ -229,15 +229,17 @@ class HomeController extends Controller
                         $qa = Quincenal_assistance::latest()->where('id_employer',$temp->id_employer)->first();
                     }
                      //creamos asistencia del dia para el empleado
-                    $da = Daily_assistance::insert([
-                        'id_employer' => $temp->id_employer,
-                        'date' => $temp->date,
-                        'entrance' => $temp->clockIn,
-                        'out' =>$temp->clockOut,
-                        'status' => "good"
-                    ]);
-                    
-                    $temp->save();
+                    $da = Daily_assistance::where('date', $temp->date)->first();
+                    if(!$da){
+                        $da = Daily_assistance::insert([
+                            'id_employer' => $temp->id_employer,
+                            'date' => $temp->date,
+                            'entrance' => $temp->clockIn,
+                            'out' =>$temp->clockOut,
+                            'status' => "good"
+                        ]);
+                    }
+                    //$temp->save();
                 }
                 $x++;
                 if($datos[0]==""){break;}
