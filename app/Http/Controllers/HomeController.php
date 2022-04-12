@@ -37,7 +37,7 @@ class HomeController extends Controller
             ]);
         }
 
-        $q = Fortnight::all();
+        $q = Fortnight::select('id','date')->orderByDesc('date')->get();
         //si encuentra un filtro mandado por get
         if(isset($_GET["q_date"])){
             $f_id = intval($_GET["q_date"]);
@@ -67,7 +67,7 @@ class HomeController extends Controller
                 $idate = date("d-m-Y",strtotime("15-".$m."-".$y));
                 $edate = date("d-m-Y",strtotime(date("t",date("m"))."-".$m."-".$y));
             }
-            $d = Fortnight::select("id")->where('date', date('Y-m-d',strtotime($idate)))->first();
+            $d = fortnight::select("id")->where('date', date('Y-m-d',strtotime($idate)))->first();
             $f_id = $d->id;
         }
         //dates in format sql
@@ -79,7 +79,7 @@ class HomeController extends Controller
             $search = strval($_GET["search"]);
             $employers = Employer::select('employers.id AS id','employers.name AS name', 'asistance.delays AS delays', 'asistance.absences AS absences')
             ->join('quincenal_assistances as asistance','employers.id', '=', 'asistance.id_employer')
-            ->join('fortnights as f', 'f.id', '=', 'asistance.id_fortnigh')
+            ->join('fortnights as f', 'f.id', '=', 'asistance.id_fortnight')
             ->whereBetween('f.date', [$b_idate, $b_edate])
             ->where('employers.name','LIKE',"%$search%" )
             ->where('f.id', $f_id)
@@ -91,7 +91,7 @@ class HomeController extends Controller
         }else{
             $employers = Employer::select('employers.id AS id','employers.name AS name', 'asistance.delays AS delays', 'asistance.absences AS absences')
             ->join('quincenal_assistances as asistance','employers.id', '=', 'asistance.id_employer')
-            ->join('fortnights as f', 'f.id', '=', 'asistance.id_fortnigh')
+            ->join('fortnights as f', 'f.id', '=', 'asistance.id_fortnight')
             ->where('f.id', $f_id)
             ->whereBetween('f.date', [$b_idate, $b_edate])
             ->orderBy('name')
@@ -115,13 +115,14 @@ class HomeController extends Controller
             $job = $_POST["job"];
             $department = $_POST["department"];
             $salary = $_POST["salary"];
-            $d = Employer::insert([
-                'id' => $id,
-                'name' => $name,
-                'job' => $job,
-                'department' => $department,
-                'salary' => $salary
-            ]);
+            $d = new Employer();
+            $d->id = $id;
+            $d->name = $name;
+            $d->job = $job;
+            $d->department = $department;
+            $d->salary = $salary;
+            $d->save();
+            unset ($d);
 
             $month = date('m');
             $month = intval($month);
@@ -131,12 +132,13 @@ class HomeController extends Controller
             $collection = Fortnight::latest()->orderByDesc("date")->first();
             $id_f = $collection->id;
 
-            $e = Quincenal_assistance::insert([
-                'id_employer' => $id,
-                'id_fortnigh' => $id_f,
-                'delays' => 0,
-                'absences' => 0
-            ]);
+            $e = new Quincenal_assistance();
+            $e->id_employer = $id;
+            $e->id_fortnight = $id_f;
+            $e->delays = 0;
+            $e->absences = 0;
+            $e->save();
+            unset($e);
         }
         return redirect()->action([HomeController::class, 'index']);
     }
@@ -145,6 +147,17 @@ class HomeController extends Controller
     {
         $c = Configuration::whereId('id')->first();
         $files = $request->file('csv');
+        if(intval(date("d")) >= 15){
+            $idate = "01-".date("m")."-".date("Y");
+        }
+        else {
+            $m = date('m', strtotime('-1 month'));
+            $y = date("Y");
+            if(intval($m) == 1) $y = date('Y', strtotime('-1 year'));
+            $idate = date("d-m-Y",strtotime("15-".$m."-".$y));
+        }
+        $idate = date('Y-m-d',strtotime($idate));
+
         if (($gestor = fopen($files->path(), "r")) !== FALSE)
 		{
             $x = 0;
@@ -184,23 +197,26 @@ class HomeController extends Controller
                     //Si el empleado no se ha añadido a la BD se añade automaticamente
                     $t = Employer::select('id')->where('id', $temp->id_employer)->first();
                     if(!$t){
-                        $e = Employer::insert([
-                            'id' => $temp->id_employer,
-                            'name' => $temp->name,
-                            'job' => "",
-                            'department' => $datos[21],
-                            'salary' => 0
-                        ]);
+                        $e = new Employer();
+                        $e->id = $temp->id_employer;
+                        $e->name = $temp->name;
+                        $e->job = "";
+                        $e->department = $datos[21];
+                        $e->salary = 0;
+                        $e->save();
+                        unset($e);
+
                         //se crea una quincena en 0 para el empleado
-                        $collection = Fortnight::latest()->orderByDesc("date")->first();
+                        $collection = Fortnight::where('date',$idate)->first();
                         $id_f = $collection->id;
 
-                        $a = Quincenal_assistance::insert([
-                            'id_employer' => $temp->id_employer,
-                            'id_fortnigh' => $id_f,
-                            'delays' => 0,
-                            'absences' => 0
-                        ]);
+                        $a = new Quincenal_assistance();
+                        $a->id_employer = $temp->id_employer;
+                        $a->id_fortnight = $id_f;
+                        $a->delays = 0;
+                        $a->absences = 0;
+                        $a->save();
+                        unset($a);
                     }
 
                     //se añade la quincena
@@ -212,32 +228,33 @@ class HomeController extends Controller
                     $date_c = date("Y-m-d", strtotime($y.'-'.$m.'-'.$d));
                     $q = Fortnight::select('id', 'date')->where('date',$date_c)->first();
                     if(!$q){
-                        $q = Fortnight::insert([
-                            'date' => $date_c
-                        ]);
-                        $q = Fortnight::latest()->where('date',$date_c)->first();
+                        unset($q);
+                        $q = new Fortnight();
+                        $q->date = $date_c;
+                        $q->save();
                     }
                     //creamos fila de asistencia quincenal en caso de que no exista
-                    $qa = Quincenal_assistance::select('id_employer', 'id_fortnigh')->where('id_employer', $temp->id_employer)->where('id_fortnigh', $q->id)->first();
+                    $qa = Quincenal_assistance::select('id_employer', 'id_fortnight')->where('id_employer', $temp->id_employer)->where('id_fortnight', $q->id)->first();
                     if(!$qa){
-                        $qa = Quincenal_assistance::insert([
-                            'id_employer' => $temp->id_employer,
-                            'id_fortnigh' => $q->id,
-                            'delays' => 0,
-                            'absences' => 0
-                        ]);
-                        $qa = Quincenal_assistance::latest()->where('id_employer',$temp->id_employer)->first();
+                        unset($qa);
+                        $qa = new Quincenal_assistance();
+                        $qa->id_employer = $temp->id_employer;
+                        $qa->id_fortnight = $q->id;
+                        $qa->delays = 0;
+                        $qa->absences = 0;
+                        $qa->save();
                     }
                      //creamos asistencia del dia para el empleado
                     $da = Daily_assistance::where('date', $temp->date)->first();
                     if(!$da){
-                        $da = Daily_assistance::insert([
-                            'id_employer' => $temp->id_employer,
-                            'date' => $temp->date,
-                            'entrance' => $temp->clockIn,
-                            'out' =>$temp->clockOut,
-                            'status' => "good"
-                        ]);
+                        unset($da);
+                        $da = new Daily_assistance();
+                        $da->id_employer = $temp->id_employer;
+                        $da->date = $temp->date;
+                        $da->entrance = $temp->clockIn;
+                        $da->out = $temp->clockOut;
+                        $da->status = "good";
+                        $da->save();
                     }
                     //$temp->save();
                 }

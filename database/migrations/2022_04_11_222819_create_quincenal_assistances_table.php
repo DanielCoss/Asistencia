@@ -17,7 +17,7 @@ class CreateQuincenalAssistancesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('id_employer')->references('id')->on('employers');
-            $table->foreignId('id_fortnigh')->references('id')->on('fortnights');
+            $table->foreignId('id_fortnight')->references('id')->on('fortnights');
             $table->integer("delays");
             $table->integer("absences");
         });
