@@ -24,7 +24,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     Control de Asistencia
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -66,9 +66,9 @@
                             @endif
                             @else
                                 <div class="">
-                                    <form class="d-flex">
+                                    <form class="d-flex" action="" method="get">
                                         @csrf
-                                        <input class="form-control me-2 " type="search" placeholder="Buscar Empleado" aria-label="Buscar">
+                                        <input class="form-control me-2 " type="search" placeholder="Buscar Empleado" aria-label="Buscar" name="search">
                                         <button class="btn btn-primary me-3" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                                     </form>
                                 </div>
