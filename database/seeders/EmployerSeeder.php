@@ -15,7 +15,7 @@ class EmployerSeeder extends Seeder
     public function run()
     {
         $employer = new employer();
-        $employer->id = 1;
+        $employer->id = 10000;
         $employer->name = " Vallejo Coss Josue Daniel";
         $employer->department= 'Edifico T';
         $employer->job = 'Becario';
@@ -23,7 +23,7 @@ class EmployerSeeder extends Seeder
         $employer->save();
         unset($employer);
         $employer = new employer();
-        $employer->id = 2;
+        $employer->id = 10001;
         $employer->name = "Vallejo Lopez Raul Segio";
         $employer->department = 'Edifico A';
         $employer->job = 'Becario';

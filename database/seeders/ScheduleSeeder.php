@@ -15,137 +15,137 @@ class ScheduleSeeder extends Seeder
     public function run()
     {
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 1;
-       $h->tday = 1;
+       $h->day = 1;
        $h->class = "Ingles 1";
        $h->classrom = "1o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 1;
-       $h->tday = 2;
+       $h->day = 2;
        $h->class = "Ingles 2";
-       $h->salon = "3o B";
+       $h->classrom = "3o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 1;
-       $h->tday = 3;
+       $h->day = 3;
        $h->class = "Ingles 2";
-       $h->salon = "3o B";
+       $h->classrom = "3o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 1;
-       $h->tday = 4;
+       $h->day = 4;
        $h->class = "Ingles 1";
-       $h->salon = "1o B";
+       $h->classrom = "1o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 1;
-       $h->tday = 5;
+       $h->day = 5;
        $h->class = "Ingles 3";
-       $h->salon = "3o B";
+       $h->classrom = "3o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 2;
-       $h->tday = 1;
+       $h->day = 1;
        $h->class = "Ingles 3";
-       $h->salon = "3o A";
+       $h->classrom = "3o A";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 2;
-       $h->tday = 2;
+       $h->day = 2;
        $h->class = "Ingles 3";
-       $h->salon = "3o A";
+       $h->classrom = "3o A";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 2;
-       $h->tday = 4;
+       $h->day = 4;
        $h->class = "Ingles 1";
-       $h->salon = "1o A";
+       $h->classrom = "1o A";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 2;
-       $h->tday = 5;
+       $h->day = 5;
        $h->class = "Ingles 1";
-       $h->salon = "1o B";
+       $h->classrom = "1o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 3;
-       $h->tday = 2;
+       $h->day = 2;
        $h->class = "Ingles 1";
-       $h->salon = "1o B";
+       $h->classrom = "1o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 3;
-       $h->tday = 3;
+       $h->day = 3;
        $h->class = "Ingles 3";
-       $h->salon = "3o B";
+       $h->classrom = "3o B";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 3;
-       $h->tday = 4;
+       $h->day = 4;
        $h->class = "Ingles 1";
-       $h->salon = "1o A";
+       $h->classrom = "1o A";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 4;
-       $h->tday = 1;
+       $h->day = 1;
        $h->class = "Ingles 1";
-       $h->salon = "1o c";
+       $h->classrom = "1o c";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 4;
-       $h->tday = 4;
+       $h->day = 4;
        $h->class = "Ingles 3";
-       $h->salon = "1o c";
+       $h->classrom = "1o c";
        $h->save();
        unset($h);
 
        $h = new Schedule();
-       $h->id_employer = 1;
+       $h->id_employer = 10000;
        $h->time = 4;
-       $h->tday = 5;
+       $h->day = 5;
        $h->class = "Ingles 1";
-       $h->salon = "3o A";
+       $h->classrom = "3o A";
        $h->save();
        unset($h);
     }

@@ -16,8 +16,8 @@ class CreateClassHoursTable extends Migration
         Schema::create('class_hours', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->time('entrada');
-            $table->time('salida');
+            $table->time('enter');
+            $table->time('exit');
         });
     }
 
