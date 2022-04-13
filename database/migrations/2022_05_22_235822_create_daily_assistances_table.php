@@ -17,6 +17,7 @@ class CreateDailyAssistancesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('id_employer')->references('id')->on('employers');
+            $table->foreignId('id_fortnight')->references('id')->on('fortnights');
             $table->time("entrance");
             $table->time("out");
             $table->string("status");

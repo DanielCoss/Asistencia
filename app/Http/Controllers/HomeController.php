@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Daily_assistance;
 use App\Models\Employer;
 use App\Models\Fortnight;
+use App\Models\Quincenal_assistance;
+
 class HomeController extends Controller
 {
     /**
@@ -64,6 +67,32 @@ class HomeController extends Controller
             $d = fortnight::select("id")->where('date', date('Y-m-d',strtotime($idate)))->first();
             $f_id = $d->id;
         }
+
+        $emps = Employer::all();
+        foreach($emps as $emp){
+            $da = Daily_assistance::where('id_employer',$emp->id)
+            ->where('id_fortnight', $f_id)
+            ->where('status',"absent")
+            ->get();
+            $dd = Daily_assistance::where('id_employer',$emp->id)
+            ->where('id_fortnight', $f_id)
+            ->where('status',"delay")
+            ->get();
+            $qedit = Quincenal_assistance::where('id_employer',$emp->id)
+            ->where('id_fortnight', $f_id)
+            ->first();
+            $band = 0;
+            if($dd->count() > 0) {
+                $qedit->delays = $dd->count();
+                $band = 1;
+            }
+            if($da->count() > 0) {
+                $qedit->absences = $da->count();
+                $band = 1;
+            }
+            if($band) $qedit->save();
+        }
+
         //dates in format sql
         $b_idate = date('Y-m-d',strtotime($idate));
         $b_edate = date('Y-m-d',strtotime($edate));

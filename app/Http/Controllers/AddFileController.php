@@ -14,32 +14,29 @@ class AddFileController extends Controller
 {
     public function import_data_file(Request $request)
     {
-        $c = Configuration::whereId('id')->first();
+        $cg = Configuration::latest()->first();
         $files = $request->file('csv');
-        if(intval(date("d")) >= 15){
-            $idate = "01-".date("m")."-".date("Y");
-        }
-        else {
+        if (intval(date("d")) >= 15) {
+            $idate = "01-" . date("m") . "-" . date("Y");
+        } else {
             $m = date('m', strtotime('-1 month'));
             $y = date("Y");
-            if(intval($m) == 1) $y = date('Y', strtotime('-1 year'));
-            $idate = date("d-m-Y",strtotime("15-".$m."-".$y));
+            if (intval($m) == 1) $y = date('Y', strtotime('-1 year'));
+            $idate = date("d-m-Y", strtotime("15-" . $m . "-" . $y));
         }
-        $idate = date('Y-m-d',strtotime($idate));
+        $idate = date('Y-m-d', strtotime($idate));
 
-        if (($gestor = fopen($files->path(), "r")) !== FALSE)
-		{
+        if (($gestor = fopen($files->path(), "r")) !== FALSE) {
             $x = 0;
-	   		while (($datos = fgetcsv($gestor, 0, ",")) !== FALSE)
-	   		{
-                if($x > 0){
+            while (($datos = fgetcsv($gestor, 0, ",")) !== FALSE) {
+                if ($x > 0) {
                     $datos =  $datos; //added
 
                     $temp = new Csv_file();
                     $temp->id_employer = (int)$datos[0];
                     $temp->name = $datos[3];
                     $nd = str_replace('/', '-', $datos[5]);
-                    $temp->date = date("Y-m-d",strtotime($nd)); //date
+                    $temp->date = date("Y-m-d", strtotime($nd)); //date
                     $temp->onDuty = $datos[7]; //time
                     $temp->offDuty = $datos[8]; //time
                     $temp->clockIn = $datos[9]; //time
@@ -47,26 +44,26 @@ class AddFileController extends Controller
                     $temp->late = $datos[13]; //time
                     $temp->early = $datos[14]; //time
 
-                    if(strtolower($datos[15]) == "true")
-                        $temp->absent =boolval(1); //boolean
+                    if (strtolower($datos[15]) == "true")
+                        $temp->absent = boolval(1); //boolean
                     else
                         $temp->absent = boolval(0); //boolean
 
                     $temp->workTime = $datos[17]; //time
 
-                    if(strtolower($datos[19]) == "true")
-                        $temp->must_c_in =boolval(1); //boolean
+                    if (strtolower($datos[19]) == "true")
+                        $temp->must_c_in = boolval(1); //boolean
                     else
                         $temp->must_c_in = boolval(0); //boolean
-                        
-                    if(strtolower($datos[20]) == "true")
-                        $temp->must_c_out =boolval(1); //boolean
+
+                    if (strtolower($datos[20]) == "true")
+                        $temp->must_c_out = boolval(1); //boolean
                     else
                         $temp->must_c_out = boolval(0); //boolean
-                    
+
                     //Si el empleado no se ha añadido a la BD se añade automaticamente
                     $t = Employer::select('id')->where('id', $temp->id_employer)->first();
-                    if(!$t){
+                    if (!$t) {
                         $e = new Employer();
                         $e->id = $temp->id_employer;
                         $e->name = $temp->name;
@@ -77,7 +74,7 @@ class AddFileController extends Controller
                         unset($e);
 
                         //se crea una quincena en 0 para el empleado
-                        $collection = Fortnight::where('date',$idate)->first();
+                        $collection = Fortnight::where('date', $idate)->first();
                         $id_f = $collection->id;
 
                         $a = new Quincenal_assistance();
@@ -91,13 +88,13 @@ class AddFileController extends Controller
 
                     //se añade la quincena
                     $m = date('m', strtotime($temp->date));
-                    $y = date("Y",strtotime($temp->date));
-                    $d = date('d',strtotime($temp->date));
-                    if(intval($d) >= 15) $d = "15";
+                    $y = date("Y", strtotime($temp->date));
+                    $d = date('d', strtotime($temp->date));
+                    if (intval($d) >= 15) $d = "15";
                     else $d = "01";
-                    $date_c = date("Y-m-d", strtotime($y.'-'.$m.'-'.$d));
-                    $q = Fortnight::select('id', 'date')->where('date',$date_c)->first();
-                    if(!$q){
+                    $date_c = date("Y-m-d", strtotime($y . '-' . $m . '-' . $d));
+                    $q = Fortnight::select('id', 'date')->where('date', $date_c)->first();
+                    if (!$q) {
                         unset($q);
                         $q = new Fortnight();
                         $q->date = $date_c;
@@ -105,7 +102,7 @@ class AddFileController extends Controller
                     }
                     //creamos fila de asistencia quincenal en caso de que no exista
                     $qa = Quincenal_assistance::select('id_employer', 'id_fortnight')->where('id_employer', $temp->id_employer)->where('id_fortnight', $q->id)->first();
-                    if(!$qa){
+                    if (!$qa) {
                         unset($qa);
                         $qa = new Quincenal_assistance();
                         $qa->id_employer = $temp->id_employer;
@@ -114,23 +111,31 @@ class AddFileController extends Controller
                         $qa->absences = 0;
                         $qa->save();
                     }
-                     //creamos asistencia del dia para el empleado
+                    //creamos asistencia del dia para el empleado
                     $da = Daily_assistance::where('date', $temp->date)->first();
-                    if(!$da){
+                    if (!$da) {
                         unset($da);
                         $da = new Daily_assistance();
                         $da->id_employer = $temp->id_employer;
                         $da->date = $temp->date;
                         $da->entrance = $temp->clockIn;
                         $da->out = $temp->clockOut;
-                        $da->status = "good";
+                        $da->status = "asistance";
+                        $da->id_fortnight = $q->id;
+                        if ($temp->must_c_in == true) {
+                            if ($temp->absent) $da->status = "absent";
+                            elseif ($temp->late > $cg->delay) $da->status = "delay";
+                        }
+
                         $da->save();
                     }
-                    $temp->save();
+                    //$temp->save();
                     unset($temp);
                 }
                 $x++;
-                if($datos[0]==""){break;}
+                if ($datos[0] == "") {
+                    break;
+                }
             }
             return redirect()->action([HomeController::class, 'index']);
         }

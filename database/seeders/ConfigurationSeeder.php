@@ -15,7 +15,7 @@ class ConfigurationSeeder extends Seeder
     public function run()
     {
         $c = new Configuration();
-        $c->delay = 15;
+        $c->delay = "00:15:00";
         $c->save();
     }
 }
