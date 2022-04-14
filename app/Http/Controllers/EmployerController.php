@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Class_hour;
+use App\Models\Classrom;
 use App\Models\Daily_assistance;
 use App\Models\Quincenal_assistance;
 use App\Models\Schedule;
 use App\Models\Employer;
+use App\Models\Employer_Schedule;
+use App\Models\Lesson;
 
 class EmployerController extends Controller
 {
@@ -16,35 +19,48 @@ class EmployerController extends Controller
             $d = intval($_GET["day"]);
             $h = intval($_GET["hour"]);
             $e = intval($_GET["id"]);
-            Schedule::where('day', $d)->where('time', $h)->where("id_employer", $e)->delete();
+            $s = Schedule::where('day', $d)->where('time', $h)->first();
+            Employer_Schedule::where('id_schedule', $s->id)->where("id_employer", $e)->delete();
         } elseif (isset($_GET["class"]) && isset($_GET["classrom"])) {
 
             $d = intval($_GET["day"]);
             $h = intval($_GET["hour"]);
             $s = strval($_GET["classrom"]);
             $c = strval($_GET["class"]);
-            $x = Schedule::where('id_employer', $id_employer)->where('day', $d)->where('time', $h)->first();
-            if ($x == NULL || !$x->id_employer == $id_employer) { //si no encuentra el hourrio mandado por el formulario, crea uno nuevo para el Employer
-                $n = new Schedule();
-                $n->id_employer = $id_employer;
-                $n->day = $d;
-                $n->time = $h;
-                $n->classrom = $s;
-                $n->class = $c;
-                $n->save();
-            } else { //si lo encuentra, acutaliza el Schedule del Employer
-                $n = Schedule::where('day', $d)->where('time', $h)->where("id_employer", $id_employer)->first();
-                $n->day = $d;
-                $n->time = $h;
-                $n->classrom = $s;
-                $n->class = $c;
-                $n->save();
+
+            $classrom = Classrom::where('classrom', $s)->first();
+            if (!$classrom) {
+                unset($classrom);
+                $classrom = new Classrom();
+                $classrom->classrom = $s;
+                $classrom->save();
             }
+
+            $lesson = Lesson::where('name', $c)->first();
+            if (!$lesson) {
+                unset($lesson);
+                $lesson = new Lesson();
+                $lesson->name = $c;
+                $lesson->save();
+            }
+
+            $s = Schedule::where('day', $d)->where('time', $h)->first();
+            $x = Employer_Schedule::where('id_employer', $id_employer)->where('id_schedule', $s->id)->first();
+            if ($x == NULL || !$x->id_employer == $id_employer) { //si no encuentra el hourrio mandado por el formulario, crea uno nuevo para el Employer
+                unset($x);
+                $x = new Employer_Schedule();
+                $x->id_employer = $id_employer;
+            }
+            $x->id_schedule = $s->id;
+            $x->id_classrom = $classrom->id;
+            $x->id_lesson = $lesson->id;
+            $x->save();
+
         } elseif (isset($_GET["eliminate"])) {
             $e = intval($_GET["eliminate"]);
             Quincenal_assistance::where('id_employer', $e)->delete();
             Daily_assistance::where('id_employer', $e)->delete();
-            Schedule::where('id_employer', $e)->delete();
+            Employer_Schedule::where('id_employer', $e)->delete();
             Employer::where('id', $e)->delete();
 
             return redirect()->action([HomeController::class, 'index']);
@@ -64,7 +80,14 @@ class EmployerController extends Controller
         $employer = Employer::where('id', $id_employer)->first();
         $q_asistance = Quincenal_assistance::where('id_employer', $id_employer)->get();
         $d_asistance = Daily_assistance::where('id_employer', $id_employer)->get();
-        $schedule = Schedule::where('id_employer', $id_employer)->orderby('time')->orderby('day')->get();
+
+        $schedule = Employer_Schedule::select('c.classrom as classrom', 'l.name as class', 's.day as day', 's.time as time')
+        ->join('classroms as c', 'employer__schedules.id_classrom', '=', 'c.id')
+        ->join('lessons as l', 'employer__schedules.id_lesson', '=', 'l.id')
+        ->join('schedules as s', 'employer__schedules.id_schedule', '=', 's.id')
+        ->where('employer__schedules.id_employer', $id_employer)
+        ->get();
+        //dd($schedule);
         $hoursclass = Class_hour::orderBy('id')->get();
 
         return view('Employer', compact('employer', 'q_asistance', 'd_asistance', 'schedule', 'hoursclass'));
