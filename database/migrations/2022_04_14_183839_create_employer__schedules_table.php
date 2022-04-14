@@ -17,9 +17,9 @@ class CreateEmployerSchedulesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId("id_employer")->references("id")->on("employers");
-            $table->foreignId("id_lesson")->references("id")->on("lessons");
+            $table->foreignId("id_schedule")->references("id")->on("schedules");
             $table->foreignId("id_classrom")->references("id")->on("classroms");
-            $table->foreignId("id_lesson")->references("id")->on("employers");
+            $table->foreignId("id_lesson")->references("id")->on("lessons");
         });
     }
 

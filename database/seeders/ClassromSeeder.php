@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Lesson;
+use App\Models\Classrom;
 use Illuminate\Database\Seeder;
 
-class LessonSeeder extends Seeder
+class ClassromSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,15 +14,15 @@ class LessonSeeder extends Seeder
      */
     public function run()
     {
-        $n = new Lesson();
-        $n->id = 1;
-        $n->name = "Ingles 1";
-        $n->save();
-        unset($n);
-        
-        $n = new Lesson();
+        $n = new Classrom();
         $n->id = 2;
-        $n->name = "Ingles 2";
+        $n->classrom = "1o B";
+        $n->save();
+
+        unset($n);
+        $n = new Classrom();
+        $n->id = 1;
+        $n->classrom = "1o A";
         $n->save();
     }
 }
