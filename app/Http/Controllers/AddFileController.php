@@ -112,7 +112,7 @@ class AddFileController extends Controller
                         $qa->save();
                     }
                     //creamos asistencia del dia para el empleado
-                    $da = Daily_assistance::where('date', $temp->date)->first();
+                    $da = Daily_assistance::where('date', $temp->date)->where('id_employer',$temp->id_employer)->first();
                     if (!$da) {
                         unset($da);
                         $da = new Daily_assistance();

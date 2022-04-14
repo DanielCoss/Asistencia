@@ -169,8 +169,8 @@
                     @csrf
                     <input type="hidden" id="eliminar" name="eliminate" value="{{ $employer->id }}">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" class="btn btn-primary">Si</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="button submit" class="btn btn-primary">Si</button>
                     </div>
                 </form>
             </div>
