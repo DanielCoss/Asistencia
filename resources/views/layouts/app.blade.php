@@ -45,7 +45,7 @@
                                     <a class="nav-link text-black" href="/calendario">Calendario</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-black" href="/salones">Salones</a>
+                                    <a class="nav-link text-black" href="/salones">Salones y Clases</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-black" href="#" data-bs-toggle="modal"

@@ -12,3 +12,7 @@ Route::post('/agregarEmpleado', [App\Http\Controllers\AddEmployerController::cla
 Route::post('/importarCSV', [App\Http\Controllers\AddFileController::class, 'import_data_file'])->name('Lista');
 
 Route::get('/empleado/{id_employer}', [App\Http\Controllers\EmployerController::class, 'seeEmployer']);
+
+Route::get('/salones', [App\Http\Controllers\ClassromController::class, 'seeClassroms']);
+
+Route::any('/salon/{id_classrom}',[App\Http\Controllers\ClassromController::class, 'seeClassrom']);

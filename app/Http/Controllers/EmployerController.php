@@ -21,40 +21,44 @@ class EmployerController extends Controller
             $e = intval($_GET["id"]);
             $s = Schedule::where('day', $d)->where('time', $h)->first();
             Employer_Schedule::where('id_schedule', $s->id)->where("id_employer", $e)->delete();
-        } elseif (isset($_GET["class"]) && isset($_GET["classrom"])) {
+        } elseif (isset($_GET["class"]) && isset($_GET["classrom"])) { //si se va a editar o agregar un salon y clase
 
             $d = intval($_GET["day"]);
             $h = intval($_GET["hour"]);
-            $s = strval($_GET["classrom"]);
-            $c = strval($_GET["class"]);
+            $s = intval($_GET["classrom"]);
+            $c = intval($_GET["class"]);
 
-            $classrom = Classrom::where('classrom', $s)->first();
-            if (!$classrom) {
-                unset($classrom);
-                $classrom = new Classrom();
-                $classrom->classrom = $s;
-                $classrom->save();
-            }
+            $classrom = Classrom::find($s);
+            // if (!$classrom) {
+            //     unset($classrom);
+            //     $classrom = new Classrom();
+            //     $classrom->classrom = $s;
+            //     $classrom->save();
+            // }
 
-            $lesson = Lesson::where('name', $c)->first();
-            if (!$lesson) {
-                unset($lesson);
-                $lesson = new Lesson();
-                $lesson->name = $c;
-                $lesson->save();
-            }
+            $lesson = Lesson::find($c);
+            // if (!$lesson) {
+            //     unset($lesson);
+            //     $lesson = new Lesson();
+            //     $lesson->name = $c;
+            //     $lesson->save();
+            // }
 
-            $s = Schedule::where('day', $d)->where('time', $h)->first();
-            $x = Employer_Schedule::where('id_employer', $id_employer)->where('id_schedule', $s->id)->first();
-            if ($x == NULL || !$x->id_employer == $id_employer) { //si no encuentra el hourrio mandado por el formulario, crea uno nuevo para el Employer
-                unset($x);
-                $x = new Employer_Schedule();
-                $x->id_employer = $id_employer;
+            
+            if($lesson && $classrom){
+                $s = Schedule::where('day', $d)->where('time', $h)->first();
+                $x = Employer_Schedule::where('id_employer', $id_employer)->where('id_schedule', $s->id)->first();
+                if ($x == NULL || !$x->id_employer == $id_employer) { //si no encuentra el hourrio mandado por el formulario, crea uno nuevo para el Employer
+                    unset($x);
+                    $x = new Employer_Schedule();
+                    $x->id_employer = $id_employer;
+                }
+                $x->id_schedule = $s->id;
+                $x->id_classrom = $classrom->id;
+                $x->id_lesson = $lesson->id;
+                $x->save();
             }
-            $x->id_schedule = $s->id;
-            $x->id_classrom = $classrom->id;
-            $x->id_lesson = $lesson->id;
-            $x->save();
+            
 
         } elseif (isset($_GET["eliminate"])) {
             $e = intval($_GET["eliminate"]);
@@ -90,6 +94,9 @@ class EmployerController extends Controller
         //dd($schedule);
         $hoursclass = Class_hour::orderBy('id')->get();
 
-        return view('Employer', compact('employer', 'q_asistance', 'd_asistance', 'schedule', 'hoursclass'));
+        $classroms = Classrom::all();
+        $lessons = Lesson::all();
+
+        return view('Employer', compact('employer', 'q_asistance', 'd_asistance', 'schedule', 'hoursclass','classroms','lessons'));
     }
 }

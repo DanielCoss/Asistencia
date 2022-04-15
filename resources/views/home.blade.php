@@ -26,7 +26,7 @@
                     </div>
                   </div>
             </div>
-        @endauth
+        
         <div class="container col-md-10">
             <div class="card">
                 <div class="card-header">{{ __('Listado Empleados') }}</div>
@@ -58,6 +58,7 @@
                 </div>
             </div>
         </div>
+        @endauth
     </div>
 </div>
   <!-- Modal add employer-->

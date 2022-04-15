@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             @auth
-                <div class="mb-5">
+                <div class="">
                     <div class="card">
                         <div class="card-header">
                             <h4>{{ $employer->name }}</h4>
@@ -192,15 +192,28 @@
                     <input type="hidden" name="id" value="{{$employer->id}}">
                     <div class="modal-body">
                         <table class="table">
-                          <p class="font-italic">No uses puntos!</p>
                           <tbody>
                             <tr>
-                              <th>Clase</th>
-                              <td><input class="form-control" type="text" name="class" id="claseTextBox" value="" required></td>
+                              <th>Nombre de la Clase</th>
+                              <td>
+                                  <select name="class" class="form-select" aria-label="Default select example"required>
+                                    <option selected>Selecciona la clase</option>
+                                    @foreach ($lessons as $ll)
+                                        <option value="{{$ll->id}}">{{$ll->name}}</option>
+                                    @endforeach
+                                  </select>
+                                </td>
                             </tr>
                             <tr>
                               <th>Salon</th>
-                              <td><input class="form-control" type="text" name="classrom" id="salonTextBox" value="" required></td>
+                              <td>
+                                  <select name="classrom" class="form-select" aria-label="Default select example"required>
+                                    <option>Selecciona el salon</option>
+                                    @foreach ($classroms as $cl)
+                                        <option value="{{$cl->id}}">{{$cl->classrom}}</option>
+                                    @endforeach
+                                  </select>
+                                </td>
                             </tr>
                             <tr>
                               <th>Eliminar Hora</th>
@@ -230,13 +243,14 @@
                 var d = id[2];
                 //obtener clase y salon
                 var str = $(this).text();
-                str = str.split(".")
+                str = str.split('\n');
                 console.log(str);
                 var c = str[0];
                 var s = str[1];
                 //Dar valores al modal
                 $("#claseTextBox").val(c);
                 $("#salonTextBox").val(s);
+                $("#salonTextBox").text(s);
                 $("#horaForm").val(h);
                 $("#diaForm").val(d);
             });
@@ -250,7 +264,7 @@ function insertarHora($hora, $dia, $horasclase)
     $band = 0;
     foreach ($horasclase as $c) {
         if ($c->day == $dia && $c->time == $hora) {
-            echo '<button type="button" class="btn btn-light mb-2" id="horario-'. $hora.'-'.$dia.'" data-bs-toggle="modal" data-bs-target="#editarHora">' . $c->class . '.<br>' . $c->classrom . '</button> ';
+            echo '<button type="button" class="btn btn-light mb-2" id="horario-'. $hora.'-'.$dia.'" data-bs-toggle="modal" data-bs-target="#editarHora">' . $c->class . '<br>' . $c->classrom . '</button> ';
             $band = 1;
         }
     }
