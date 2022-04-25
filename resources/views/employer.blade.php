@@ -19,10 +19,12 @@
                                     </p>
                                 </div>
                                 <div class="col d-flex flex-column align-items-end"">
-                                    <button type=" button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editarEmpleado">
-                                        Editar Empleado
+                                            <button type=" button" class="btn btn-link" data-bs-toggle="modal"
+                                    data-bs-target="#editarEmpleado">
+                                    Editar Empleado
                                     </button>
-                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#eliminarEmpleado">
+                                    <button type="button" class="btn btn-link" data-bs-toggle="modal"
+                                        data-bs-target="#eliminarEmpleado">
                                         Eliminar Empleado
                                     </button>
                                 </div>
@@ -30,7 +32,9 @@
                         </div>
                         <nav class="mt-2">
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Calendario</button>
+                                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                                    data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                                    aria-selected="true">Calendario</button>
                                 <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
                                     aria-selected="false">Horario</button>
@@ -50,7 +54,7 @@
                                 <div class="container pt-2">
                                     <p class="fst-italic text-center ">Da click en la clase para editarla</p>
                                     <div class="row">
-                                        <div class="d-flex flex-column col-1">
+                                        <div class="d-flex flex-column col">
                                             <p class="fw-bolder">Hora / Dia</p>
                                             @php
                                                 $cont_horas = 0;
@@ -64,9 +68,13 @@
                                                     $salida = date_format($salida, 'g:i A');
                                                     $cont_horas++;
                                                 @endphp
-                                                <div class="mb-2" style="max-height: 62px;">
+                                                <button type="button" class="btn btn-light mb-2" id="hora-{{ $h->id }}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editarHoraClase">{{ $entrada }}<br>{{ $salida }}</button>
+                                                {{-- <div class="mb-2" style="max-height: 62px;">
                                                     <p class="fw-bolder">{{ $entrada }}<br>{{ $salida }}</p>
-                                                </div>
+                                                    
+                                                </div> --}}
                                             @endforeach
                                         </div>
                                         @for ($i = 1; $i < 8; $i++)
@@ -137,8 +145,8 @@
                         <input type="text" class="form-control" id="departamentoEditar" name="department"
                             value="{{ $employer->department }}" required>
                         <label for="#puestoEditar">Puesto:</label>
-                        <input type="text" class="form-control" id="puestoEditar" name="job" value="{{ $employer->job }}"
-                            required>
+                        <input type="text" class="form-control" id="puestoEditar" name="job"
+                            value="{{ $employer->job }}" required>
                         <label for="#sueldoEditar">Sueldo:</label>
                         <input type="number" class="form-control" id="sueldoEditar" name="salary" min="0" step=".01"
                             value="{{ $employer->salary }}" required>
@@ -189,44 +197,86 @@
                     @csrf
                     <input type="hidden" name="day" id="diaForm">
                     <input type="hidden" name="hour" id="horaForm">
-                    <input type="hidden" name="id" value="{{$employer->id}}">
+                    <input type="hidden" name="id" value="{{ $employer->id }}">
                     <div class="modal-body">
                         <table class="table">
-                          <tbody>
-                            <tr>
-                              <th>Nombre de la Clase</th>
-                              <td>
-                                  <select name="class" class="form-select" aria-label="Default select example"required>
-                                    <option selected>Selecciona la clase</option>
-                                    @foreach ($lessons as $ll)
-                                        <option value="{{$ll->id}}">{{$ll->name}}</option>
-                                    @endforeach
-                                  </select>
-                                </td>
-                            </tr>
-                            <tr>
-                              <th>Salon</th>
-                              <td>
-                                  <select name="classrom" class="form-select" aria-label="Default select example"required>
-                                    <option>Selecciona el salon</option>
-                                    @foreach ($classroms as $cl)
-                                        <option value="{{$cl->id}}">{{$cl->classrom}}</option>
-                                    @endforeach
-                                  </select>
-                                </td>
-                            </tr>
-                            <tr>
-                              <th>Eliminar Hora</th>
-                              <td><input type="checkbox" name="eliminateH" id="borrarHora" class="" value="on"> <span class="text-danger">Esta opcion eliminara la hora asignada</span></td>
-                            </tr>
-                          </tbody>
+                            <tbody>
+                                <tr>
+                                    <th>Nombre de la Clase</th>
+                                    <td>
+                                        <select name="class" class="form-select" aria-label="Default select example"
+                                            required>
+                                            <option selected>Selecciona la clase</option>
+                                            @foreach ($lessons as $ll)
+                                                <option value="{{ $ll->id }}">{{ $ll->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Salon</th>
+                                    <td>
+                                        <select name="classrom" class="form-select" aria-label="Default select example"
+                                            required>
+                                            <option>Selecciona el salon</option>
+                                            @foreach ($classroms as $cl)
+                                                <option value="{{ $cl->id }}">{{ $cl->classrom }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Eliminar Hora</th>
+                                    <td><input type="checkbox" name="eliminateH" id="borrarHora" class=""
+                                            value="on"> <span class="text-danger">Esta opcion eliminara la hora
+                                            asignada</span></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="button submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
-                  </form>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal editar hora clase-->
+    <div class="modal fade" id="editarHoraClase" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Hora Clase</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="get">
+                    @csrf
+                    <input type="hidden" name="edit_h" id="edit_h">
+                    <div class="modal-body">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Hora de inicio</th>
+                                    <td>
+                                        <input class="form-control" type="time" name="hour1" id="e_hour1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Hora de finalizacion</th>
+                                    <td>
+                                        <input class="form-control" type="time" name="hour2" id="e_hour2">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -234,11 +284,9 @@
     <script>
         $(document).ready(function() {
             $("[id^=horario]").click(function(a) {
-                $("body").append("hola");
                 //Obtener id
                 var id = $(this).attr("id");
                 id = id.split("-");
-                console.log(id);
                 var h = id[1];
                 var d = id[2];
                 //obtener clase y salon
@@ -254,6 +302,12 @@
                 $("#horaForm").val(h);
                 $("#diaForm").val(d);
             });
+            $("[id^=hora]").click(function(b){
+                var id = $(this).attr("id");
+                id = id.split("-");
+                var nid = id[1];
+                $('#edit_h').val(nid);
+            });
         });
     </script>
 @endsection
@@ -264,12 +318,12 @@ function insertarHora($hora, $dia, $horasclase)
     $band = 0;
     foreach ($horasclase as $c) {
         if ($c->day == $dia && $c->time == $hora) {
-            echo '<button type="button" class="btn btn-light mb-2" id="horario-'. $hora.'-'.$dia.'" data-bs-toggle="modal" data-bs-target="#editarHora">' . $c->class . '<br>' . $c->classrom . '</button> ';
+            echo '<button type="button" class="btn btn-light mb-2" id="horario-' . $hora . '-' . $dia . '" data-bs-toggle="modal" data-bs-target="#editarHora">' . $c->class . '<br>' . $c->classrom . '</button> ';
             $band = 1;
         }
     }
     if ($band == 0) {
-        echo '<button type="button" class="btn btn-light mb-2" id="horario-'.$hora.'-'.$dia.'" data-bs-toggle="modal" data-bs-target="#editarHora">ㅤ<br>ㅤ</button>';
+        echo '<button type="button" class="btn btn-light mb-2" id="horario-' . $hora . '-' . $dia . '" data-bs-toggle="modal" data-bs-target="#editarHora">ㅤ<br>ㅤ</button>';
     }
 }
 @endphp

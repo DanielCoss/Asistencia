@@ -79,6 +79,11 @@ class EmployerController extends Controller
             $em->department = $department;
             $em->salary = $salary;
             $em->save();
+        } elseif(isset($_GET["edit_h"])) {
+            $hour_u = Class_hour::find((int)$_GET["edit_h"]);
+            $hour_u->enter = date('H:i',strtotime(($_GET['hour1'])));
+            $hour_u->exit = date('H:i',strtotime(($_GET['hour2'])));
+            $hour_u->save();
         }
         $id_employer = intval($id_employer);
         $employer = Employer::where('id', $id_employer)->first();
