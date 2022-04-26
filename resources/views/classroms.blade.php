@@ -26,8 +26,7 @@
                                     <h4>Salones</h4>
                                     <p class="text-muted">Da click para ver el salon</p>
                                     @foreach ($classr as $c)
-                                        <a
-                                                href="/salon/{{ $c->id }}"><button type="button" class="btn btn-light">{{ $c->classrom }}</button></a>
+                                        <a href="/salon/{{ $c->id }}"><button type="button" class="btn btn-light">{{ $c->classrom }}</button></a>
                                     @endforeach
                                 </div>
                                 <div class="col flex-colums">

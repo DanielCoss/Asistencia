@@ -86,7 +86,7 @@ class EmployerController extends Controller
             $hour_u->save();
         }
         $id_employer = intval($id_employer);
-        $employer = Employer::where('id', $id_employer)->first();
+        $employer = Employer::find($id_employer);
         $q_asistance = Quincenal_assistance::where('id_employer', $id_employer)->get();
         $d_asistance = Daily_assistance::where('id_employer', $id_employer)->get();
 
@@ -98,7 +98,6 @@ class EmployerController extends Controller
         ->get();
         //dd($schedule);
         $hoursclass = Class_hour::orderBy('id')->get();
-
         $classroms = Classrom::all();
         $lessons = Lesson::all();
 
