@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Daily_assistance;
 use App\Models\Employer;
+use App\Models\EmployerDate;
 use App\Models\Fortnight;
 use App\Models\Quincenal_assistance;
 
@@ -26,6 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        EmployerDate::truncate();
         //si el dia es 1 o 15 se crea una nueva fila de quincena
         $today = (int)date('d');
         if ($today == 15 || $today == 1) {
@@ -54,18 +56,49 @@ class HomeController extends Controller
             } else {
                 $edate = date("d-m-Y", strtotime("15" . "-" . $m . "-" . $y));
             }
-        } else {
+        } elseif(isset($_GET['pick_idate']) && isset($_GET['pick_edate'])){
+
+            $idate = date('d-m-Y',strtotime($_GET['pick_idate']));
+            $edate = date('d-m-Y',strtotime($_GET['pick_edate']));
+            $di = date('Y-m-d', strtotime($idate));
+            $de = date('Y-m-d', strtotime($edate));
+
+            $emp = Employer::all();
+            foreach($emp as $e){
+                $ed = new EmployerDate();
+                $ed->id = $e->id;
+                $ed->name = $e->name;
+                $a = Daily_assistance::where('id_employer', $e->id)
+                ->whereBetween('date', [$di, $de])
+                ->where('status', 'absent')
+                ->get();
+                
+                $ed->absences = $a->count();
+                $d = Daily_assistance::where('id_employer', $e->id)
+                ->whereBetween('date', [$di, $de])
+                ->where('status', 'delay')
+                ->get();
+                $ed->delays = $d->count();
+                $ed->save();
+            }
+
+            $employers = EmployerDate::all()->sortBy('name');
+            return view('home', compact('employers', "idate", "edate", "q"));
+        }
+        else {
             if (intval(date("d")) >= 15) {
                 $idate = "01-" . date("m") . "-" . date("Y");
+                $last_idate = $idate;
                 $edate = "15-" . date("m") . "-" . date("Y");
             } else {
                 $m = date('m', strtotime('-1 month'));
                 $y = date("Y");
                 if (intval($m) == 1) $y = date('Y', strtotime('-1 year'));
+                $last_idate = date('Y-m-01');
                 $idate = date("d-m-Y", strtotime("15-" . $m . "-" . $y));
                 $edate = date("d-m-Y", strtotime(date("t", date("m")) . "-" . $m . "-" . $y));
             }
-            $d = fortnight::select("id")->where('date', date('Y-m-d', strtotime($idate)))->first();
+            $d = Fortnight::select("id")->where('date', date('Y-m-d', strtotime($last_idate)))->first();
             if (!$d) {
                 $insert_f = new Fortnight();
                 if ((int)date("d") >= 15)
@@ -130,6 +163,8 @@ class HomeController extends Controller
                 ->orderBy('name')
                 ->get();
         }
+
         return view('home', compact('employers', "idate", "edate", "q"));
     }
 }
+
