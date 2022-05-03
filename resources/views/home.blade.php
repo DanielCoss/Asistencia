@@ -15,13 +15,22 @@
                           <p>{{$idate}}</p>
                           <label for="edate">Fecha Final</label>
                           <p>{{$edate}}</p>
-                          <label for="date">Escoge la quincena</label>
+                          <h5><label for="date">Escoge la quincena</label></h5>
                           <select class="form-select" aria-label=".form-select-lg example" name="q_date">
                             @foreach ($q as $n)
                                 <option value="{{$n->id}}|">{{date("d-m-Y",strtotime($n->date))}}</option>
                             @endforeach
                           </select>
                           <button type="button submit" class="btn btn-primary mt-1">Aplicar Filtro</button>
+                      </form>
+                      <form action="/home" method="get" class="mt-3">
+                        @csrf
+                        <h5>Escoger fecha</h5>
+                        <label for="pick_idate">Fecha Inicial</label>
+                        <input type="date" name="pick_idate" id="pick_idate" class="form-control">
+                        <label for="pick_edate">Fecha Final</label>
+                        <input type="date" name="pick_edate" id="pick_edate" class="form-control">
+                        <button type="button submit" class="btn btn-primary mt-1">Aplicar Filtro</button>
                       </form>
                     </div>
                   </div>

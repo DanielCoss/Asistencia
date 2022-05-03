@@ -5,6 +5,7 @@
         <style>
             .b1 {
                 max-height: 62px;
+                font-size: small;
             }
 
         </style>

@@ -66,7 +66,16 @@ class HomeController extends Controller
                 $edate = date("d-m-Y", strtotime(date("t", date("m")) . "-" . $m . "-" . $y));
             }
             $d = fortnight::select("id")->where('date', date('Y-m-d', strtotime($idate)))->first();
-            $f_id = $d->id;
+            if (!$d) {
+                $insert_f = new Fortnight();
+                if ((int)date("d") >= 15)
+                    $day = '15';
+                else
+                    $day = '1';
+                $insert_f->date = date('Y-m-' . $day);
+                $insert_f->save();
+                $f_id = $insert_f->id; 
+            } else $f_id = $d->id;
         }
 
         $emps = Employer::all();
