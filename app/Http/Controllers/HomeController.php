@@ -72,7 +72,7 @@ class HomeController extends Controller
                 ->whereBetween('date', [$di, $de])
                 ->where('status', 'absent')
                 ->get();
-                
+
                 $ed->absences = $a->count();
                 $d = Daily_assistance::where('id_employer', $e->id)
                 ->whereBetween('date', [$di, $de])
@@ -107,7 +107,7 @@ class HomeController extends Controller
                     $day = '1';
                 $insert_f->date = date('Y-m-' . $day);
                 $insert_f->save();
-                $f_id = $insert_f->id; 
+                $f_id = $insert_f->id;
             } else $f_id = $d->id;
         }
 
@@ -165,6 +165,10 @@ class HomeController extends Controller
         }
 
         return view('home', compact('employers', "idate", "edate", "q"));
+    }
+
+    public function calendar(){
+        return view('calendar');
     }
 }
 
