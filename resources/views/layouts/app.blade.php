@@ -105,11 +105,7 @@
                 </div>
             </div>
         </nav>
-        <script>
-            < script src = "{{ asset('js/calendar.js') }}"
-            defer >
-        </script>
-        </script>
+        <script src="{{ asset('js/calendar.js') }}" defer></script>
         <main class="py-4">
             @yield('content')
         </main>

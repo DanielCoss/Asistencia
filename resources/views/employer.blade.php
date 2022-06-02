@@ -19,8 +19,8 @@
                                     </p>
                                 </div>
                                 <div class="col d-flex flex-column align-items-end"">
-                                            <button type=" button" class="btn btn-link" data-bs-toggle="modal"
-                                    data-bs-target="#editarEmpleado">
+                                                                    <button type=" button" class="btn btn-link"
+                                    data-bs-toggle="modal" data-bs-target="#editarEmpleado">
                                     Editar Empleado
                                     </button>
                                     <button type="button" class="btn btn-link" data-bs-toggle="modal"
@@ -73,7 +73,7 @@
                                                     data-bs-target="#editarHoraClase">{{ $entrada }}<br>{{ $salida }}</button>
                                                 {{-- <div class="mb-2" style="max-height: 62px;">
                                                     <p class="fw-bolder">{{ $entrada }}<br>{{ $salida }}</p>
-                                                    
+
                                                 </div> --}}
                                             @endforeach
                                         </div>
@@ -281,6 +281,43 @@
         </div>
     </div>
 
+    <button type="button" class="btn btn-light mb-2" id="editar_a" data-bs-toggle="modal"
+        data-bs-target="#editarAsistencia">Editar Asistencia</button>
+
+    {{-- Modal para editar asistencia del usario --}}
+    <div class="modal fade" id="editarAsistencia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Asistencia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="post">
+                    @csrf
+                    <input type="hidden" name="id" id="id_a">
+                    <div class="modal-body">
+                        <div class="form-check">
+                            <h5>Cambiar la asistencia del empleado</h5>
+                            <input class="form-check-input" type="radio" id="asistencia" name="status" value="asistance">
+                            <label for="asistencia">Asistencia</label><br>
+                            <input class="form-check-input" type="radio" id="falta" name="status" value="absent">
+                            <label for="falta">Falta</label><br>
+                            <input class="form-check-input" type="radio" id="retardo" name="status" value="delay">
+                            <label for="retardo">Retardo</label>
+                        </div>
+                        <label for="note_a">Nota del motivo del cambio</label>
+                        <input class="form-control" type="text" name="note" id="note_a" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         $(document).ready(function() {
             $("[id^=horario]").click(function(a) {
@@ -302,7 +339,7 @@
                 $("#horaForm").val(h);
                 $("#diaForm").val(d);
             });
-            $("[id^=hora]").click(function(b){
+            $("[id^=hora]").click(function(b) {
                 var id = $(this).attr("id");
                 id = id.split("-");
                 var nid = id[1];

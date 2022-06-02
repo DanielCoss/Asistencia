@@ -2,6 +2,6 @@
 @section('title', 'Calendario')
 @section('content')
     <div class="container">
-        <div id="calendar">Calendario</div>
+        <div id="calendar"></div>
     </div>
 @endsection
