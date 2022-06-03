@@ -46,9 +46,9 @@
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav me-auto">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link text-black" href="/calendario">Calendario</a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a class="nav-link text-black" href="/salones">Salones y Clases</a>
                                 </li>
