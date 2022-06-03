@@ -19,7 +19,7 @@
                                     </p>
                                 </div>
                                 <div class="col d-flex flex-column align-items-end"">
-                                                                    <button type=" button" class="btn btn-link"
+                                                                            <button type=" button" class="btn btn-link"
                                     data-bs-toggle="modal" data-bs-target="#editarEmpleado">
                                     Editar Empleado
                                     </button>
@@ -42,9 +42,7 @@
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                <div class="card-footer text-muted">Retardos 10 Faltas 11</div>
                                 <div class="card-body">
-                                    <h5 class="card-subtitle">Calendario</h5>
                                     <div class="container" id="div-calendario">
                                         <div id='calendar'></div>
                                     </div>
@@ -281,9 +279,6 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-light mb-2" id="editar_a" data-bs-toggle="modal"
-        data-bs-target="#editarAsistencia">Editar Asistencia</button>
-
     {{-- Modal para editar asistencia del usario --}}
     <div class="modal fade" id="editarAsistencia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -292,13 +287,14 @@
                     <h5 class="modal-title" id="exampleModalLabel">Editar Asistencia</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="" method="post">
+                <form action="/editarAsistencia" id="formAsistencia" method="POST">
                     @csrf
-                    <input type="hidden" name="id" id="id_a">
+                    <input type="hidden" name="id" id="id_a" value="{{$employer->id}}">
+                    <input type="hidden" name="date" id="date_a">
                     <div class="modal-body">
                         <div class="form-check">
                             <h5>Cambiar la asistencia del empleado</h5>
-                            <input class="form-check-input" type="radio" id="asistencia" name="status" value="asistance">
+                            <input class="form-check-input" type="radio" id="asistencia" name="status" value="asistance" required>
                             <label for="asistencia">Asistencia</label><br>
                             <input class="form-check-input" type="radio" id="falta" name="status" value="absent">
                             <label for="falta">Falta</label><br>
@@ -310,13 +306,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button id="guardarAsistencia" type="button submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
-
 
     <script>
         $(document).ready(function() {

@@ -124,6 +124,14 @@ class HomeController extends Controller
             $qedit = Quincenal_assistance::where('id_employer', $emp->id)
                 ->where('id_fortnight', $f_id)
                 ->first();
+            if($qedit == null){
+                $qedit = new Quincenal_assistance();
+                $qedit->id_employer = $emp->id;
+                $qedit->id_fortnight = $f_id;
+                $qedit->delays = 0;
+                $qedit->absences = 0;
+                $qedit->save();
+            }
             $band = 0;
             if ($dd->count() > 0) {
                 $qedit->delays = $dd->count();

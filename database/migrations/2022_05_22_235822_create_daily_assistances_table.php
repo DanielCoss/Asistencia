@@ -23,6 +23,8 @@ class CreateDailyAssistancesTable extends Migration
             $table->string("status");
             $table->date("date");
             $table->string("note")->nullable();
+            $table->string('backgroundColor')->nullable();
+            $table->string('textColor')->nullable();
         });
     }
 
